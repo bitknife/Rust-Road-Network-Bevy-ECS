@@ -1,0 +1,16 @@
+[package]
+name = "road_network"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "road_network"
+path = "src/lib.rs"
+
+[dependencies]
+rand = "0.8"
+
+[dependencies.bevy]
+version = "0.13"
+default-features = false
+features = ["bevy_winit", "bevy_render", "bevy_sprite"]
