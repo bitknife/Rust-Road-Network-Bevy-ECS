@@ -1,5 +1,5 @@
 use std::collections::{HashMap, HashSet};
-use crate::{Road, Settlement, Waypoint};
+use crate::core::components::{Settlement, Waypoint, Road};
 
 pub fn build_smart_roads(
     settlements: &HashMap<usize, Settlement>,

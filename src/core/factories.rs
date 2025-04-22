@@ -1,6 +1,5 @@
-use std::collections::HashMap;
 use rand::{Rng, seq::SliceRandom};
-use crate::model::{Settlement, Waypoint, WaypointKind, Road};
+use crate::{Settlement, Waypoint, WaypointKind};
 
 pub fn spawn_settlements(
     count: usize,

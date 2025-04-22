@@ -1,5 +1,6 @@
 use bevy::prelude::*;
-use road_network::{spawn_settlements, build_smart_roads, ensure_connected_network, Road, Settlement, Waypoint};
+use road_network::{build_smart_roads, ensure_connected_network, Road, Waypoint};
+use road_network::core::factories::spawn_settlements;
 
 fn main() {
     App::new()
@@ -23,13 +24,13 @@ fn setup(mut commands: Commands, windows: Query<&Window>) {
 
     center_camera(&mut commands, window, x_range, y_range);
 
-    let (settlements, waypoints) = spawn_settlements(20, x_range, y_range);
+    let (settlements, waypoints) = spawn_settlements(100, x_range, y_range);
 
     let mut roads = build_smart_roads(
         &settlements.iter().map(|s| (s.id, s.clone())).collect(),
         &waypoints.iter().map(|w| (w.id, w.clone())).collect(),
-        0.2,
-        100.0,
+        0.05,
+        50.0,
     );
 
     // Ensure connectivity
@@ -44,18 +45,36 @@ fn setup(mut commands: Commands, windows: Query<&Window>) {
     }
 
     for wp in &waypoints {
-        let color = if let Some(settlement) = settlements.iter().find(|s| s.waypoint_id == wp.id) {
-            if settlement.population > 5000 {
+        if let Some(settlement) = settlements.iter().find(|s| s.waypoint_id == wp.id) {
+            let color = if settlement.population > 9000 {
                 Color::RED
             } else {
                 Color::ORANGE
-            }
-        } else {
-            Color::WHITE
-        };
+            };
 
-        draw_circle(&mut commands, wp.position, color, 5.0);
+            // Calculate radius based on population
+            let radius = map_population_to_radius(settlement.population);
+
+            draw_circle(&mut commands, wp.position, color, radius);
+        } else {
+            // Default for non-settlement waypoints
+            draw_circle(&mut commands, wp.position, Color::WHITE, 2.0);
+        }
     }
+}
+
+fn map_population_to_radius(population: u32) -> f32 {
+    let min_pop = 100;     // Minimum expected population
+    let max_pop = 10_000;  // Maximum expected population
+
+    let min_radius = 2.0;
+    let max_radius = 10.0;
+
+    let clamped_pop = population.clamp(min_pop, max_pop);
+
+    let scale = (clamped_pop - min_pop) as f32 / (max_pop - min_pop) as f32;
+
+    min_radius + scale * (max_radius - min_radius)
 }
 
 fn center_camera(commands: &mut Commands, window: &Window, x_range: (f32, f32), y_range: (f32, f32)) {

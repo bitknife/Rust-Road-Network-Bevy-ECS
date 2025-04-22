@@ -1,7 +1,6 @@
-pub mod model;
-pub mod utils;
-pub mod road_builder;
+pub mod core;
 
-pub use model::*;
-pub use utils::*;
-pub use road_builder::*;
+// Re-export key types and systems for easier access
+pub use core::components::{Road, Settlement, Waypoint, WaypointKind};
+pub use core::systems::{build_smart_roads, ensure_connected_network};
+pub use core::factories::spawn_settlements;
