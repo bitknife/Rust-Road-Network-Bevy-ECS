@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use road_network::{core::resources::SimulationConfig, generate_world, render_roads_system, render_settlements_system};
+use road_network::{core::resources::SimulationConfig, generate_world, render_npcs_system, render_roads_system, render_settlements_system};
 
 fn main() {
     App::new()
@@ -20,6 +20,7 @@ fn main() {
         .add_systems(Update, (
             render_settlements_system,
             render_roads_system,
+            render_npcs_system,
         ))
         .run();
 }

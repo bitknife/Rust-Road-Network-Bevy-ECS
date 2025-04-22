@@ -6,4 +6,4 @@ pub use core::components::{Road, Settlement};
 pub use core::resources::SimulationConfig;
 pub use core::systems::{generate_world};
 
-pub use render::systems::{render_settlements_system, render_roads_system};
+pub use render::systems::{render_settlements_system, render_roads_system, render_npcs_system};

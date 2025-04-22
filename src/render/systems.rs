@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use crate::core::components::{Settlement, Position, Road};
+use crate::core::NPC;
 
 #[derive(Component)]
 pub struct Rendered;  // Marker for already-rendered entities
@@ -86,6 +87,33 @@ pub fn render_roads_system(
                 ..default()
             },
             RoadVisual { parent: entity },
+        ));
+
+        commands.entity(entity).insert(Rendered);
+    }
+}
+
+#[derive(Component)]
+pub struct NpcVisual {
+    pub parent: Entity,  // Link back to NPC entity
+}
+
+pub fn render_npcs_system(
+    mut commands: Commands,
+    query: Query<(Entity, &NPC, &Position), Without<Rendered>>,
+) {
+    for (entity, _npc, pos) in query.iter() {
+        commands.spawn((
+            SpriteBundle {
+                sprite: Sprite {
+                    color: Color::WHITE,
+                    custom_size: Some(Vec2::splat(5.0)),  // Small dot
+                    ..default()
+                },
+                transform: Transform::from_translation(Vec3::new(pos.coords.x, pos.coords.y, 2.0)),
+                ..default()
+            },
+            NpcVisual { parent: entity },
         ));
 
         commands.entity(entity).insert(Rendered);
