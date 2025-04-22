@@ -1,6 +1,7 @@
 pub mod model;
 pub mod utils;
+pub mod road_builder;
 
-pub use model::{Waypoint, Road, RoadNetwork, Settlement, WaypointKind};
-pub use utils::spawn_settlements;
-pub use utils::build_smart_roads;
+pub use model::*;
+pub use utils::*;
+pub use road_builder::*;
