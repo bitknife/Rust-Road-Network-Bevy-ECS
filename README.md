@@ -27,6 +27,9 @@ Screenshot showing 500 settlements and 500 NPCs.
 
 
 ## TODO
-No performance optimizations or profiling made at all. Performance breaks down (on my MAC) at around 10000 settlements.
+No performance optimizations or profiling made at all. Performance breaks down (on my machine) at around 10000 settlements.
 
-Would be fun to optimize and load all cores/GPU to the maximum and see how large a simulation could be driven.
+CPU cores was not loaded at all so was maybe a rendering queue (no batching I believe) choke?
+
+Would be interesting and fun to investigate and optimize to load all cores/GPU to the maximum and see how large a
+simulation could be driven.
