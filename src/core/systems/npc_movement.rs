@@ -57,7 +57,7 @@ pub fn npc_random_movement_system(
             npc.last_settlement = Some(current);
             npc.current_settlement = next;
             pos.coords = Vec2::new(next.0 as f32, next.1 as f32);
-            info!("{} moved to {:?}", npc.name, next);
+            // info!("{} moved to {:?}", npc.name, next);
         }
     }
 }

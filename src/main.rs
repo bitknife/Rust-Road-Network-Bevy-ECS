@@ -5,10 +5,10 @@ use bevy_tweening::TweeningPlugin;
 
 fn main() {
     let config = SimulationConfig {
-        x_range: (0.0, 1400.0),
-        y_range: (0.0, 1000.0),
-        settlement_count: 1000,
-        npc_count: 500
+        x_range: (0.0, 1800.0),
+        y_range: (0.0, 1300.0),
+        settlement_count: 3000,
+        npc_count: 5000
     };
 
     App::new()

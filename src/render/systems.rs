@@ -1,6 +1,6 @@
 use bevy::prelude::*;
-use crate::core::components::{Settlement, Position, Road};
-use crate::core::NPC;
+use crate::core::components::{Settlement, Position, Road, NPC};
+use rand::Rng;
 
 #[derive(Component)]
 pub struct Rendered;  // Marker for already-rendered entities
@@ -11,9 +11,9 @@ pub fn render_settlements_system(
 ) {
     for (entity, settlement, pos) in query.iter() {
         let color = if settlement.population > 9000 {
-            Color::WHITE
+            Color::RED
         } else {
-            Color::SILVER
+            Color::ORANGE
         };
 
         let radius = map_population_to_radius(settlement.population);
@@ -98,16 +98,25 @@ pub struct NpcVisual {
     pub parent: Entity,  // Link back to NPC entity
 }
 
+
 pub fn render_npcs_system(
     mut commands: Commands,
     query: Query<(Entity, &NPC, &Position), Without<Rendered>>,
 ) {
     for (entity, _npc, pos) in query.iter() {
+        let mut rng = rand::thread_rng();
+
+        let random_color = Color::rgb(
+            rng.gen_range(0.2..1.0),   // Avoid too dark colors
+            rng.gen_range(0.2..1.0),
+            rng.gen_range(0.2..1.0),
+        );        
+        
         commands.spawn((
             SpriteBundle {
                 sprite: Sprite {
-                    color: Color::WHITE,
-                    custom_size: Some(Vec2::splat(5.0)),  // Small dot
+                    color: random_color,
+                    custom_size: Some(Vec2::splat(6.0)),  // Small dot
                     ..default()
                 },
                 transform: Transform::from_translation(Vec3::new(pos.coords.x, pos.coords.y, 2.0)),
