@@ -1,5 +1,7 @@
 ## Introduction
-Rust + Bevy ECS simulation of a road network with NPCs moving around on a 2 sec interval.
+Mini project to get a feel for game development using Rust + Bevy.
+
+The "game" is an ECS simulation of a road network with NPCs moving around on a 2 sec interval.
 
 - https://www.rust-lang.org/
 - https://bevyengine.org/
@@ -16,10 +18,12 @@ Then:
 
     $ cargo run
 
-## Screenshot
-Showing 500 settlements and 500 NPCs moving between settlements.
+## Demo
+A small animated gif showing what the simulation looks like.
+![Screenshot](media/animation.gif)
 
-![Screenshot](screenshot1.png)
+Screenshot showing 500 settlements and 500 NPCs.
+![Screenshot](media/screenshot1.png)
 
 
 ## TODO
