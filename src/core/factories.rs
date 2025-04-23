@@ -57,11 +57,11 @@ pub fn build_smart_roads(
     let mut road_id = 1;
 
     // Connect non-hubs to nearest hubs
-    for &(settlement, pos) in non_hubs {
+    for &(_, pos) in non_hubs {
         let mut nearest = None;
         let mut nearest_dist = f32::MAX;
 
-        for &(hub, hub_pos) in hubs {
+        for &(_, hub_pos) in hubs {
             let dist = pos.coords.distance(hub_pos.coords);
             if dist < nearest_dist {
                 nearest = Some(hub_pos.coords);
@@ -80,8 +80,8 @@ pub fn build_smart_roads(
     }
 
     // Local mesh between nearby non-hubs
-    for (i, &(a_settlement, a_pos)) in non_hubs.iter().enumerate() {
-        for &(b_settlement, b_pos) in non_hubs.iter().skip(i + 1) {
+    for (i, &(_, a_pos)) in non_hubs.iter().enumerate() {
+        for &(_, b_pos) in non_hubs.iter().skip(i + 1) {
             if a_pos.coords.distance(b_pos.coords) <= mesh_distance_threshold {
                 roads.push(Road {
                     id: road_id,
@@ -104,11 +104,12 @@ pub fn spawn_npcs(
     let mut npcs = Vec::new();
 
     for i in 0..npc_count {
-        let (home_settlement, home_pos) = settlements.choose(&mut rng).unwrap();
+        let (_, home_pos) = settlements.choose(&mut rng).unwrap();
 
         let npc = NPC {
             name: format!("NPC_{}", i),
-            target_settlement: None,
+            current_settlement: (home_pos.coords.x.round() as i32, home_pos.coords.y.round() as i32),
+            last_settlement: None,
             speed: rng.gen_range(0.5..2.0),
         };
 

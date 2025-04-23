@@ -1,41 +1,54 @@
 use bevy::prelude::*;
-use road_network::{core::resources::SimulationConfig, generate_world, render_npcs_system, render_roads_system, render_settlements_system};
+use road_network::{core::resources::SimulationConfig, generate_world, npc_random_movement_system, render_npcs_system, render_roads_system, render_settlements_system, sync_npc_visuals_system};
+use road_network::core::NpcMoveTimer;
+use bevy_tweening::TweeningPlugin;
 
 fn main() {
+    let config = SimulationConfig {
+        x_range: (0.0, 1400.0),
+        y_range: (0.0, 1000.0),
+        settlement_count: 1000,
+        npc_count: 500
+    };
+
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 title: "Road Network Simulator".into(),
-                resolution: (800., 600.).into(),
+                resolution: (
+                    config.x_range.1 - config.x_range.0,
+                    config.y_range.1 - config.y_range.0
+                ).into(),
                 ..default()
             }),
             ..default()
         }))
-        .insert_resource(SimulationConfig {
-            x_range: (0.0, 800.0),
-            y_range: (0.0, 600.0),
-            settlement_count: 100,
-        })
+        .add_plugins(TweeningPlugin)
+        .insert_resource(config)
         .add_systems(Startup, setup)
         .add_systems(Update, (
             render_settlements_system,
             render_roads_system,
             render_npcs_system,
+            npc_random_movement_system,
+            sync_npc_visuals_system,
         ))
         .run();
 }
 
-fn setup(mut commands: Commands, window_q: Query<&Window>) {
+fn setup(
+    mut commands: Commands,
+    window_q: Query<&Window>,
+    config: Res<SimulationConfig>,   // 💡 Access the inserted resource
+) {
+    commands.insert_resource(NpcMoveTimer(Timer::from_seconds(2.0, TimerMode::Repeating)));
+
     let window = window_q.single();
 
-    let config = SimulationConfig {
-        x_range: (0.0, window.width()),
-        y_range: (0.0, window.height()),
-        settlement_count: 100,
-    };
-
+    // No need to redefine config — use the resource directly
     generate_world(&mut commands, &config);
 
+    // If you want to adjust camera dynamically based on window/config:
     center_camera(&mut commands, window, config.x_range, config.y_range);
 }
 

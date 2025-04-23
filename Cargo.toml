@@ -8,9 +8,10 @@ name = "road_network"
 path = "src/lib.rs"
 
 [dependencies]
-rand = "0.8"
+rand = "0.8.5"
+bevy_tweening = "0.8"
 
 [dependencies.bevy]
-version = "0.13"
+version = "0.11"
 default-features = false
 features = ["bevy_winit", "bevy_render", "bevy_sprite"]

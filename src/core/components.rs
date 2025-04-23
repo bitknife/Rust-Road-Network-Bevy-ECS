@@ -17,11 +17,15 @@ pub struct Road {
 #[derive(Component, Debug, Clone)]
 pub struct NPC {
     pub name: String,
-    pub target_settlement: Option<Entity>,  // Dynamic target
-    pub speed: f32,                         // Units per tick
+    pub current_settlement: (i32, i32),   // Using key format
+    pub last_settlement: Option<(i32, i32)>,
+    pub speed: f32,                          // Units per tick
 }
 
 #[derive(Component, Debug, Clone)]
 pub struct Position {
     pub coords: Vec2,
 }
+
+#[derive(Component, Debug, Clone, Copy, PartialEq)]
+pub struct MovingTo(pub Vec2);

@@ -11,9 +11,9 @@ pub fn render_settlements_system(
 ) {
     for (entity, settlement, pos) in query.iter() {
         let color = if settlement.population > 9000 {
-            Color::RED
+            Color::WHITE
         } else {
-            Color::ORANGE
+            Color::SILVER
         };
 
         let radius = map_population_to_radius(settlement.population);
@@ -119,3 +119,41 @@ pub fn render_npcs_system(
         commands.entity(entity).insert(Rendered);
     }
 }
+
+use bevy_tweening::{Animator, Tween, lens::TransformPositionLens, EaseFunction};
+use std::time::Duration;
+use crate::MovingTo;
+
+pub fn sync_npc_visuals_system(
+    npc_positions: Query<&Position>,
+    mut visual_query: Query<(Entity, &NpcVisual, &Transform, Option<&MovingTo>)>,
+    mut commands: Commands,
+) {
+    for (entity, npc_visual, transform, moving_to_opt) in visual_query.iter_mut() {
+        if let Ok(pos) = npc_positions.get(npc_visual.parent) {
+            let target_translation = Vec3::new(pos.coords.x, pos.coords.y, transform.translation.z);
+
+            // Check if we're already moving to this destination
+            if let Some(moving_to) = moving_to_opt {
+                if moving_to.0 == pos.coords {
+                    continue;  // Already animating towards this position
+                }
+            }
+
+            // Start new tween
+            let tween = Tween::new(
+                EaseFunction::QuadraticInOut,
+                Duration::from_secs_f32(1.8),
+                TransformPositionLens {
+                    start: transform.translation,
+                    end: target_translation,
+                },
+            );
+
+            commands.entity(entity)
+                .insert(Animator::new(tween))
+                .insert(MovingTo(pos.coords));
+        }
+    }
+}
+
