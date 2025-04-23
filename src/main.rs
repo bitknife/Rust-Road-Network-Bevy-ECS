@@ -3,28 +3,55 @@ use road_network::{core::resources::SimulationConfig, generate_world, npc_random
 use road_network::core::NpcMoveTimer;
 use bevy_tweening::TweeningPlugin;
 
+use clap::Parser;
+
+/// Road Network Simulator CLI
+#[derive(Parser, Debug)]
+#[command(author, version, about)]
+struct CliArgs {
+    /// Number of settlements
+    #[arg(long, default_value_t = 100)]
+    settlements: u32,
+
+    /// Number of NPCs
+    #[arg(long, default_value_t = 50)]
+    npcs: u32,
+
+    /// NPC move interval in seconds
+    #[arg(long, default_value_t = 2.0)]
+    npc_move_interval: f32,
+
+    /// Window width
+    #[arg(long, default_value_t = 800.0)]
+    width: f32,
+
+    /// Window height
+    #[arg(long, default_value_t = 600.0)]
+    height: f32,
+}
+
 fn main() {
+    let args = CliArgs::parse();
+
     let config = SimulationConfig {
-        x_range: (0.0, 800.0),
-        y_range: (0.0, 600.0),
-        settlement_count: 100,
-        npc_count: 50
+        x_range: (0.0, args.width),
+        y_range: (0.0, args.height),
+        settlement_count: args.settlements,
+        npc_count: args.npcs,
     };
 
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 title: "Road Network Simulator".into(),
-                resolution: (
-                    config.x_range.1 - config.x_range.0,
-                    config.y_range.1 - config.y_range.0
-                ).into(),
+                resolution: (args.width, args.height).into(),
                 ..default()
             }),
             ..default()
         }))
         .add_plugins(TweeningPlugin)
         .insert_resource(config)
+        .insert_resource(NpcMoveTimer(Timer::from_seconds(args.npc_move_interval, TimerMode::Repeating)))
         .add_systems(Startup, setup)
         .add_systems(Update, (
             render_settlements_system,
@@ -39,16 +66,11 @@ fn main() {
 fn setup(
     mut commands: Commands,
     window_q: Query<&Window>,
-    config: Res<SimulationConfig>,   // 💡 Access the inserted resource
+    config: Res<SimulationConfig>,
 ) {
-    commands.insert_resource(NpcMoveTimer(Timer::from_seconds(2.0, TimerMode::Repeating)));
-
     let window = window_q.single();
 
-    // No need to redefine config — use the resource directly
     generate_world(&mut commands, &config);
-
-    // If you want to adjust camera dynamically based on window/config:
     center_camera(&mut commands, window, config.x_range, config.y_range);
 }
 

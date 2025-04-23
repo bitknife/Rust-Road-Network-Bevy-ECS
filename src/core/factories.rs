@@ -6,7 +6,7 @@ use bevy::math::Vec2;
 
 /// Spawns settlements with random positions and populations.
 pub fn spawn_settlements(
-    count: usize,
+    count: u32,
     x_range: (f32, f32),
     y_range: (f32, f32),
 ) -> Vec<(Settlement, Position)> {
@@ -98,7 +98,7 @@ pub fn build_smart_roads(
 
 pub fn spawn_npcs(
     settlements: &[(Settlement, Position)],
-    npc_count: usize,
+    npc_count: u32,
 ) -> Vec<(NPC, Position)> {
     let mut rng = rand::thread_rng();
     let mut npcs = Vec::new();

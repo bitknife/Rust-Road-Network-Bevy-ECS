@@ -2,14 +2,14 @@ use bevy::prelude::*;
 
 #[derive(Component, Debug, Clone)]
 pub struct Settlement {
-    pub id: usize,
+    pub id: u32,
     pub name: String,
     pub population: u32,
 }
 
 #[derive(Component, Debug, Clone)]
 pub struct Road {
-    pub id: usize,
+    pub id: u32,
     pub waypoint_a: Vec2,
     pub waypoint_b: Vec2,
 }

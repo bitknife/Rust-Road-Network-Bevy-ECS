@@ -4,8 +4,8 @@ use bevy::prelude::{Resource, Timer};
 pub struct SimulationConfig {
     pub x_range: (f32, f32),
     pub y_range: (f32, f32),
-    pub settlement_count: usize,
-    pub npc_count: usize
+    pub settlement_count: u32,
+    pub npc_count: u32
 }
 
 #[derive(Resource)]

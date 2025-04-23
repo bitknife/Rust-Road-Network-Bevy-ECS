@@ -8,6 +8,7 @@ name = "road_network"
 path = "src/lib.rs"
 
 [dependencies]
+clap = { version = "4.4", features = ["derive"] }
 rand = "0.8.5"
 bevy_tweening = "0.8"
 

@@ -29,7 +29,7 @@ pub fn render_settlements_system(
                 transform: Transform::from_translation(Vec3::new(pos.coords.x, pos.coords.y, 1.0)),
                 ..default()
             },
-            SettlementVisual { parent: entity },  // Optional: track which settlement this belongs to
+            SettlementVisual { },  // Optional: track which settlement this belongs to
         ));
 
         // Mark the logical entity as rendered
@@ -39,7 +39,7 @@ pub fn render_settlements_system(
 
 #[derive(Component)]
 pub struct SettlementVisual {
-    pub parent: Entity,  // Link back to the logical Settlement entity
+    // pub parent: Entity,  // Link back to the logical Settlement entity
 }
 
 fn map_population_to_radius(population: u32) -> f32 {
@@ -56,7 +56,7 @@ fn map_population_to_radius(population: u32) -> f32 {
 
 #[derive(Component)]
 pub struct RoadVisual {
-    pub parent: Entity,  // Link to logical Road entity
+    // pub parent: Entity,  // Link to logical Road entity
 }
 
 pub fn render_roads_system(
@@ -86,7 +86,7 @@ pub fn render_roads_system(
                 },
                 ..default()
             },
-            RoadVisual { parent: entity },
+            RoadVisual { },
         ));
 
         commands.entity(entity).insert(Rendered);
@@ -131,28 +131,31 @@ pub fn render_npcs_system(
 
 use bevy_tweening::{Animator, Tween, lens::TransformPositionLens, EaseFunction};
 use std::time::Duration;
+use crate::core::NpcMoveTimer;
 use crate::MovingTo;
 
 pub fn sync_npc_visuals_system(
     npc_positions: Query<&Position>,
-    mut visual_query: Query<(Entity, &NpcVisual, &Transform, Option<&MovingTo>)>,
+    mut visual_query: Query<(Entity, &NpcVisual, &mut Transform, Option<&MovingTo>)>,
+    timer: Res<NpcMoveTimer>,   // 💡 Access the timer resource
     mut commands: Commands,
 ) {
+    let interval_secs = timer.0.duration().as_secs_f32();
+    let tween_duration = interval_secs * 0.9;
+
     for (entity, npc_visual, transform, moving_to_opt) in visual_query.iter_mut() {
         if let Ok(pos) = npc_positions.get(npc_visual.parent) {
             let target_translation = Vec3::new(pos.coords.x, pos.coords.y, transform.translation.z);
 
-            // Check if we're already moving to this destination
             if let Some(moving_to) = moving_to_opt {
                 if moving_to.0 == pos.coords {
-                    continue;  // Already animating towards this position
+                    continue;  // Already animating to this destination
                 }
             }
 
-            // Start new tween
             let tween = Tween::new(
                 EaseFunction::QuadraticInOut,
-                Duration::from_secs_f32(1.8),
+                Duration::from_secs_f32(tween_duration),
                 TransformPositionLens {
                     start: transform.translation,
                     end: target_translation,
@@ -165,4 +168,5 @@ pub fn sync_npc_visuals_system(
         }
     }
 }
+
 
