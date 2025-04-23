@@ -25,6 +25,13 @@ A small animated gif showing what the simulation looks like.
 Screenshot showing 500 settlements and 500 NPCs.
 ![Screenshot](media/screenshot1.png)
 
+## What I learned
+Got a feel for 
+
+- The Rust programming language.
+- How a Rust application in general is structured.
+- How to structure an ECS application using Bevy.
+- How to model a simple game simulation for ECS execution.
 
 ## TODO
 No performance optimizations or profiling made at all. Performance breaks down (on my machine) at around 10000 settlements.
