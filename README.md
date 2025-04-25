@@ -14,7 +14,7 @@ and learning modern Rust patterns—especially around ECS, real-time simulation,
 
 
 ## Demo
-A small animated gif showing what the simulation looks like.
+A small animated gif showing what the simulation looks like. Well, its a gif, so it just loops the first move of each "NPC" :).
 ![Screenshot](media/animation.gif)
 
 Screenshot showing 500 settlements and 500 NPCs.
