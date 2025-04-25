@@ -15,6 +15,9 @@ and learning modern Rust patterns—especially around ECS, real-time simulation,
 
 ## Demo
 A small animated gif showing what the simulation looks like. Well, its a gif, so it just loops the first move of each "NPC" :).
+
+Red and Orange are settlements (Larger and smaller), the small coloured dots are NPCs moving around.
+
 ![Screenshot](media/animation.gif)
 
 Screenshot showing 500 settlements and 500 NPCs.
